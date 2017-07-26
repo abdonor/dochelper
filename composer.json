@@ -8,8 +8,8 @@
   "autoload": {
     "classmap": [
       "src/Abdonor/ServiceProvider.php"
-    ]
-
+    ],
+    "psr-4": { "Abdonor\\Modules\\DocHelper\\": "src/Abdonor/Modules/DocHelper" }
   },
   "license": "public",
   "authors": [
