@@ -1,0 +1,22 @@
+{
+  "name": "abdonor/dochelper",
+  "description": "Doctrine2 Helper Methods",
+  "require": {
+    "php": ">=5.6.4",
+    "doctrine/dbal": "2.5.*"
+  },
+  "autoload": {
+    "classmap": [
+      "src/Abdonor/ServiceProvider.php"
+    ]
+
+  },
+  "license": "public",
+  "authors": [
+    {
+      "name": "Albert Abdonor",
+      "email": "albert.abdonor@gmail.com"
+    }
+  ],
+  "minimum-stability": "dev"
+}
