@@ -16,6 +16,8 @@ class DoctrineHelper
 
     const OR = 'OR';
     const AND = 'AND';
+    const LIKE = 'LIKE';
+    const EQUAL = '=';
 
     /**
      * Example of $range: $range = ['limit' => 100, 'offset' => 20];
@@ -109,7 +111,7 @@ class DoctrineHelper
         return $this->eq($params, $nameVar, $nameColumn, self::OR);
     }
 
-    public function eq($params, $nameVar, $nameColumn, $operator)
+    public function eq($params, $nameVar, $columnName, $operator)
     {
         if (isset($params[$nameVar])) {
             $var = $params[$nameVar];
@@ -123,21 +125,22 @@ class DoctrineHelper
             $i = $this->qtdArgs;
             if (is_array($var)) {
                 foreach ($var as $item) {
-                    $dql = " $nameColumn = ?$i ";
+                    $dql = $this->columnArray($columnName, $op, $i, self::EQUAL);
                     $opX->add($dql);
                     $this->query->setParameter($i, $item);
                     $i++;
                 }
                 $this->query->andWhere($opX);
             } else {
-                $this->query->andWhere("$nameColumn = ?$i")->setParameter($i, $var);
+                $dql = $this->columnArray($columnName, $op, $i, self::EQUAL);
+                $this->query->andWhere($dql)->setParameter($i, $var);
                 $i++;
             }
             $this->qtdArgs = $i;
         }
     }
 
-    private function like($params, $nameVar, $nameColumn, $operator)
+    private function like($params, $nameVar, $columnName, $operator)
     {
         if (isset($params[$nameVar])) {
             $var = $params[$nameVar];
@@ -150,31 +153,39 @@ class DoctrineHelper
             }
 
             $i = $this->qtdArgs;
+
             if (is_array($var)) {
                 foreach ($var as $item) {
-                    $dql = '';
-                    if (is_array($nameColumn)) {
-                        $op1 = '';
-                        foreach ($nameColumn as $nameColumnItem) {
-                            $dql .= " $op1 $nameColumnItem LIKE ?$i ";
-                            $op1 = $op;
-                        }
-                    } else {
-                        $dql = " $nameColumn LIKE ?$i ";
-                    }
-
+                    $dql = $this->columnArray($columnName, $op, $i, self::LIKE);
                     $opX->add($dql);
                     $this->query->setParameter($i, '%'.$item.'%');
                     $i++;
                 }
                 $this->query->andWhere($opX);
             } else {
-                $this->query->andWhere("$nameColumn LIKE ?$i ")->setParameter($i, '%'.$var.'%');
+                $dql = $this->columnArray($columnName, $op, $i, self::LIKE);
+                $this->query->andWhere($dql)->setParameter($i, '%'.$var.'%');
                 $i++;
             }
             $this->qtdArgs = $i;
         }
 
         return $this->query;
+    }
+
+    private function columnArray($columnName, $op, $i, $comparator)
+    {
+        $dql = '';
+        if (is_array($columnName)) {
+            $op1 = '';
+            foreach ($columnName as $nameColumnItem) {
+                $dql .= " $op1 $nameColumnItem $comparator ?$i ";
+                $op1 = $op;
+            }
+        } else {
+            $dql = " $columnName $comparator ?$i ";
+        }
+
+        return $dql;
     }
 }
