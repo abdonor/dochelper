@@ -1,0 +1,38 @@
+<?php
+
+namespace App\YourDir\Repositories;
+
+use Doctrine\DBAL\Connection;
+
+class ExampleRepository extends AbstractRepository
+{
+    /**
+     * Imagining a Query String Like This: ?name=dolor&name=Atención&id=1&id=2&country=RUS&country=ESP
+     */
+    public function getList($params, $range = null, $orderBy = 'pv.nombre', $orderByOrder = 'ASC')
+    {
+        $this->query = $this->getEntityManager()
+            ->createQueryBuilder()
+            ->select('pb')
+            ->from('App\Oceano\Entities\ProductBase', 'pb')
+            ->innerJoin('App\Oceano\Entities\ProductSource',
+                'ps', 'WITH', 'pb.productSource = ps.id')
+            ->innerJoin('App\Oceano\Entities\ProductosVersion',
+                'pv', 'WITH', 'ps.productosVersion = pv.id')
+            ->leftJoin('App\Oceano\Entities\ProductHead',
+                'ph', 'WITH', 'pb.productHead = ph.id')
+            ->leftJoin('App\Oceano\Entities\BranchOffice',
+                'bo', 'WITH', 'ph.branchOffice = bo.id')
+
+            ->where('pb.deletedAt IS NULL');
+
+        $this->andLikeOr($params, 'name', ['pb.name', 'pv.nombre']);
+        $this->andEqOr($params, 'id','pb.id');
+        $this->andEqOr($params, 'country','bo.countryCode');
+        $this->andEqOr($params, 'type','pb.typeSourceProductCode');
+        $this->addOrderBy($orderBy, $orderByOrder);
+        $this->addRange($range);
+
+        return $this->query->getQuery()->getResult();
+    }
+}

@@ -1,0 +1,52 @@
+<?php
+
+namespace App\YourDir\Repositories;
+
+use Abdonor\Modules\DocHelper\DoctrineHelper;
+use Doctrine\ORM\EntityRepository;
+
+class AbstractRepository extends EntityRepository
+{
+    protected $query = null;
+
+    /**@var DoctrineHelper $doctrineHelper */
+    protected $doctrineHelper = null;
+
+    /**
+     * @return DoctrineHelper
+     */
+    public function doctrineHelper()
+    {
+        if (!$this->doctrineHelper instanceof DoctrineHelper) {
+            $this->doctrineHelper = \App::make('Abdonor\Modules\DocHelper\DoctrineHelper');
+            $this->doctrineHelper->setQuery($this->query);
+        }
+
+        return $this->doctrineHelper;
+    }
+
+    public function addRange($range)
+    {
+        $this->doctrineHelper()->addRange($range);
+    }
+
+    public function addOrderBy($column, $order = 'ASC')
+    {
+        $this->doctrineHelper()->addOrderBy($column, $order);
+    }
+
+    public function andLikeOr($params, $nameVar, $nameColumn)
+    {
+        $this->doctrineHelper()->andLikeOr($params, $nameVar, $nameColumn);
+    }
+
+    public function andLikeAnd($params, $nameVar, $nameColumn)
+    {
+        $this->doctrineHelper()->andLikeAnd($params, $nameVar, $nameColumn);
+    }
+
+    public function andEqOr($params, $nameVar, $nameColumn)
+    {
+        $this->doctrineHelper()->andEqOr($params, $nameVar, $nameColumn);
+    }
+}
