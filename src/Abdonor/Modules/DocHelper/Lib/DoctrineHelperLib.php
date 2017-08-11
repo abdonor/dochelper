@@ -43,7 +43,7 @@ class DoctrineHelperLib
     public static function getOrderBy()
     {
         $queryArr = self::getArrayQuery();
-        $data['order_by'] = isset($queryArr['order_by']) ? $queryArr['order_by'] : 1;
+        $data['order_by'] = isset($queryArr['order_by']) ? $queryArr['order_by'] : null;
         $data['order_ad'] = isset($queryArr['order_ad']) && $queryArr['order_ad'] == 'DESC' ? 'DESC' : 'ASC';
 
         return $data;
@@ -51,7 +51,9 @@ class DoctrineHelperLib
 
     public function addOrderBy($column, $order)
     {
-        $this->query->orderBy($column, $order);
+        if ($column) {
+            $this->query->orderBy($column, $order);
+        }
     }
 
     /**
