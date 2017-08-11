@@ -50,6 +50,11 @@ class DoctrineHelper extends DoctrineHelperLib
         return parent::getParams($arrAllowed);
     }
 
+    public static function getOrderBy()
+    {
+        return parent::getOrderBy();
+    }
+
     /**
      * @param $params - key value of your params to be searched.
      * @param $nameVar - Name of the var from your query string
@@ -81,5 +86,11 @@ class DoctrineHelper extends DoctrineHelperLib
     public function andEqOr($params, $nameVar, $nameColumn)
     {
         return $this->eq($params, $nameVar, $nameColumn, self::OR);
+    }
+
+    /** @return Lib\Search */
+    public function search()
+    {
+        return parent::search();
     }
 }

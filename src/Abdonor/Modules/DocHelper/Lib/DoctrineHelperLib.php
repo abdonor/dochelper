@@ -8,6 +8,8 @@ class DoctrineHelperLib
 {
     /** @var int Quantity of arguments, internal variable */
     private $qtdArgs = 0;
+    /** @var Search $search */
+    private $search;
 
     const OR = 'OR';
     const AND = 'AND';
@@ -34,6 +36,15 @@ class DoctrineHelperLib
         if ($data['limit'] == null && $data['offset'] == 0) {
             $data = null;
         }
+
+        return $data;
+    }
+
+    public static function getOrderBy()
+    {
+        $queryArr = self::getArrayQuery();
+        $data['order_by'] = isset($queryArr['order_by']) ? $queryArr['order_by'] : 1;
+        $data['order_ad'] = isset($queryArr['order_ad']) && $queryArr['order_ad'] == 'DESC' ? 'DESC' : 'ASC';
 
         return $data;
     }
@@ -149,5 +160,18 @@ class DoctrineHelperLib
         }
 
         return $dql;
+    }
+
+    protected function search()
+    {
+        if (!$this->search instanceof Search) {
+            $this->search = new Search();
+            $o = self::getOrderBy();
+            $this->search->setOrderBy($o['order_by']);
+            $this->search->setAscOrDesc($o['order_ad']);
+            $this->search->setRange(self::getRange());
+        }
+
+        return $this->search;
     }
 }
