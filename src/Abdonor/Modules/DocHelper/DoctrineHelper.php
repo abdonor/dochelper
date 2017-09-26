@@ -63,7 +63,7 @@ class DoctrineHelper extends DoctrineHelperLib
      */
     public function andLikeOr($params, $nameVar, $nameColumn)
     {
-        return $this->like($params, $nameVar, $nameColumn, DoctrineHelperLib::OR);
+        return $this->like($params, $nameVar, $nameColumn, DoctrineHelperLib::OP_OR);
     }
 
     /**
@@ -74,7 +74,7 @@ class DoctrineHelper extends DoctrineHelperLib
      */
     public function andLikeAnd($params, $nameVar, $nameColumn)
     {
-        return $this->like($params, $nameVar, $nameColumn, DoctrineHelperLib::AND);
+        return $this->like($params, $nameVar, $nameColumn, DoctrineHelperLib::OP_AND);
     }
 
     /**
@@ -85,7 +85,7 @@ class DoctrineHelper extends DoctrineHelperLib
      */
     public function andEqOr($params, $nameVar, $nameColumn)
     {
-        return $this->eq($params, $nameVar, $nameColumn, DoctrineHelperLib::OR);
+        return $this->eq($params, $nameVar, $nameColumn, DoctrineHelperLib::OP_OR);
     }
 
     /** @return Lib\Search */
