@@ -11,10 +11,10 @@ class DoctrineHelperLib
     /** @var Search $search */
     private $search;
 
-    const OR = 'OR';
-    const AND = 'AND';
-    const LIKE = 'LIKE';
-    const EQUAL = '=';
+    const OP_OR = 'OR';
+    const OP_AND = 'AND';
+    const OP_LIKE = 'LIKE';
+    const OP_EQUAL = '=';
 
     public function addRange($range)
     {
@@ -90,24 +90,24 @@ class DoctrineHelperLib
     {
         if (isset($params[$nameVar])) {
             $var = $params[$nameVar];
-            if ($operator == self::AND) {
+            if ($operator == self::OP_AND) {
                 $opX = $this->query->expr()->andX();
-                $op = self::AND;
-            } elseif ($operator == self::OR) {
+                $op = self::OP_AND;
+            } elseif ($operator == self::OP_OR) {
                 $opX = $this->query->expr()->orX();
-                $op = self::OR;
+                $op = self::OP_OR;
             }
             $i = $this->qtdArgs;
             if (is_array($var)) {
                 foreach ($var as $item) {
-                    $dql = $this->columnArray($columnName, $op, $i, self::EQUAL);
+                    $dql = $this->columnArray($columnName, $op, $i, self::OP_EQUAL);
                     $opX->add($dql);
                     $this->query->setParameter($i, $item);
                     $i++;
                 }
                 $this->query->andWhere($opX);
             } else {
-                $dql = $this->columnArray($columnName, $op, $i, self::EQUAL);
+                $dql = $this->columnArray($columnName, $op, $i, self::OP_EQUAL);
                 $this->query->andWhere($dql)->setParameter($i, $var);
                 $i++;
             }
@@ -119,26 +119,26 @@ class DoctrineHelperLib
     {
         if (isset($params[$nameVar])) {
             $var = $params[$nameVar];
-            if ($operator == self::AND) {
+            if ($operator == self::OP_AND) {
                 $opX = $this->query->expr()->andX();
-                $op = self::AND;
-            } elseif ($operator == self::OR) {
+                $op = self::OP_AND;
+            } elseif ($operator == self::OP_OR) {
                 $opX = $this->query->expr()->orX();
-                $op = self::OR;
+                $op = self::OP_OR;
             }
 
             $i = $this->qtdArgs;
 
             if (is_array($var)) {
                 foreach ($var as $item) {
-                    $dql = $this->columnArray($columnName, $op, $i, self::LIKE);
+                    $dql = $this->columnArray($columnName, $op, $i, self::OP_LIKE);
                     $opX->add($dql);
                     $this->query->setParameter($i, '%'.$item.'%');
                     $i++;
                 }
                 $this->query->andWhere($opX);
             } else {
-                $dql = $this->columnArray($columnName, $op, $i, self::LIKE);
+                $dql = $this->columnArray($columnName, $op, $i, self::OP_LIKE);
                 $this->query->andWhere($dql)->setParameter($i, '%'.$var.'%');
                 $i++;
             }
