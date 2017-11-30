@@ -88,6 +88,19 @@ class DoctrineHelper extends DoctrineHelperLib
         return $this->eq($params, $nameVar, $nameColumn, DoctrineHelperLib::OP_OR);
     }
 
+    /**
+     * This between, doesnt allow multiple search.
+     * @param $params - key value of your params to be searched.
+     * @param $nameVar1 - Name 1 of the var from your query string
+     * @param $nameVar2 - Name 2 of the var from your query string
+     * @param $nameColumn - name of your column from your entity
+     * @return result from database
+     */
+    public function andBetween($params, $nameVar1, $nameVar2, $nameColumn)
+    {
+        return $this->between($params, $nameVar1, $nameVar2, $nameColumn);
+    }
+
     /** @return Lib\Search */
     public function search()
     {

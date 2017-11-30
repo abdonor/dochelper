@@ -15,6 +15,7 @@ class DoctrineHelperLib
     const OP_AND = 'AND';
     const OP_LIKE = 'LIKE';
     const OP_EQUAL = '=';
+    const OP_BETWEEN = 'BETWEEN';
 
     public function addRange($range)
     {
@@ -148,6 +149,28 @@ class DoctrineHelperLib
         return $this->query;
     }
 
+    protected function between($params, $nameVar1, $nameVar2, $columnName)
+    {
+        if (isset($params[$nameVar1]) && isset($params[$nameVar2])) {
+            $var1 = $params[$nameVar1];
+            $var2 = $params[$nameVar2];
+
+            $i = $this->qtdArgs;
+
+            if (!is_array($var1) && !is_array($var2)) {
+                $i2 = $i + 1;
+                $dql = $this->columnBetween($columnName, $i, $i2);
+                $this->query->andWhere($dql);
+                $this->query->setParameter($i, $var1);
+                $this->query->setParameter($i2, $var2);
+                $i = $i +2;
+            }
+            $this->qtdArgs = $i;
+        }
+
+        return $this->query;
+    }
+
     protected function columnArray($columnName, $op, $i, $comparator)
     {
         $dql = '';
@@ -162,6 +185,12 @@ class DoctrineHelperLib
         }
 
         return $dql;
+    }
+
+    protected function columnBetween($columnName, $i, $i2)
+    {
+        $comparator = self::OP_BETWEEN;
+        return " $columnName $comparator ?$i AND ?$i2 ";
     }
 
     protected function search()
