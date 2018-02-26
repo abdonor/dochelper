@@ -78,6 +78,13 @@ class DoctrineHelperLib
     {
         $params = [];
         $queryArr = self::getArrayQuery();
+
+        return self::getParamsInput($arrAllowed, $queryArr);
+    }
+
+    public static function getParamsInput($arrAllowed, $queryArr)
+    {
+        $params = [];
         foreach ($queryArr as $key => $value) {
             if (isset($arrAllowed[$key])) {
                 $params[$key] = $value;
