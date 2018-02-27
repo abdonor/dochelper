@@ -82,9 +82,10 @@ class DoctrineHelperLib
         return self::getParamsInput($arrAllowed, $queryArr);
     }
 
-    public static function getParamsInput($arrAllowed, $queryArr)
+    public static function getParamsInput($arrAllowed, $queryArr = [])
     {
         $params = [];
+        $queryArr = array_merge(self::getArrayQuery(), $queryArr);
         foreach ($queryArr as $key => $value) {
             if (isset($arrAllowed[$key])) {
                 $params[$key] = $value;
