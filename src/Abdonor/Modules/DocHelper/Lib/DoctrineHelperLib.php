@@ -97,7 +97,7 @@ class DoctrineHelperLib
 
     protected function eq($params, $nameVar, $columnName, $operator)
     {
-        if (isset($params[$nameVar])) {
+        if (isset($params[$nameVar]) && $params[$nameVar]) {
             $var = $params[$nameVar];
             if ($operator == self::OP_AND) {
                 $opX = $this->query->expr()->andX();
@@ -126,7 +126,7 @@ class DoctrineHelperLib
 
     protected function like($params, $nameVar, $columnName, $operator)
     {
-        if (isset($params[$nameVar])) {
+        if (isset($params[$nameVar]) && $params[$nameVar]) {
             $var = $params[$nameVar];
             if ($operator == self::OP_AND) {
                 $opX = $this->query->expr()->andX();
@@ -138,7 +138,7 @@ class DoctrineHelperLib
 
             $i = $this->qtdArgs;
 
-            if (is_array($var)) {
+            if (is_array($var) && $var) {
                 foreach ($var as $item) {
                     $dql = $this->columnArray($columnName, $op, $i, self::OP_LIKE);
                     $opX->add($dql);
@@ -159,7 +159,7 @@ class DoctrineHelperLib
 
     protected function between($params, $nameVar1, $nameVar2, $columnName)
     {
-        if (isset($params[$nameVar1]) && isset($params[$nameVar2])) {
+        if (isset($params[$nameVar1]) && isset($params[$nameVar2]) && $params[$nameVar1] && $params[$nameVar2]) {
             $var1 = $params[$nameVar1];
             $var2 = $params[$nameVar2];
 
