@@ -101,6 +101,11 @@ class DoctrineHelper extends DoctrineHelperLib
         return $this->between($params, $nameVar1, $nameVar2, $nameColumn);
     }
 
+    public function andIn($params, $nameVar1, $nameColumn)
+    {
+        return $this->in($params, $nameVar1, $nameColumn, DoctrineHelperLib::OP_OR);
+    }
+
     /** @return Lib\Search */
     public function search()
     {

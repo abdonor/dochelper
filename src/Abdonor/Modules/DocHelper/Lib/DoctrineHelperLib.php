@@ -11,6 +11,7 @@ class DoctrineHelperLib
     /** @var Search $search */
     private $search;
 
+    const OP_IN = 'IN';
     const OP_OR = 'OR';
     const OP_AND = 'AND';
     const OP_LIKE = 'LIKE';
@@ -177,6 +178,27 @@ class DoctrineHelperLib
         }
 
         return $this->query;
+    }
+
+    protected function in($params, $nameVar, $columnName, $operator)
+    {
+        if (isset($params[$nameVar]) && $params[$nameVar]) {
+            $var = $params[$nameVar];
+            if ($operator == self::OP_AND) {
+                $opX = $this->query->expr()->andX();
+                $op = self::OP_AND;
+            } elseif ($operator == self::OP_OR) {
+                $opX = $this->query->expr()->orX();
+                $op = self::OP_OR;
+            }
+            $i = $this->qtdArgs;
+            {
+                $dql = " $columnName IN ( ?$i ) ";
+                $this->query->andWhere($dql)->setParameter($i, $var);
+                $i++;
+            }
+            $this->qtdArgs = $i;
+        }
     }
 
     protected function columnArray($columnName, $op, $i, $comparator)
