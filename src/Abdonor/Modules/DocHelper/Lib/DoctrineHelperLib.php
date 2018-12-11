@@ -95,7 +95,21 @@ class DoctrineHelperLib
 
         return $params;
     }
+    
+    public static function getParamsNoQS($arrAllowed, $queryArr = [])
+    {
+        $params = [];
+        if (is_array($queryArr)) {
+            foreach ($queryArr as $key => $value) {
+                if (isset($arrAllowed[$key])) {
+                    $params[$key] = $value;
+                }
+            }
+        }
 
+        return $params;
+    }
+    
     protected function eq($params, $nameVar, $columnName, $operator)
     {
         if (isset($params[$nameVar]) && $params[$nameVar]) {
