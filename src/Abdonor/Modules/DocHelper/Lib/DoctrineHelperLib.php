@@ -157,6 +157,39 @@ class DoctrineHelperLib
 
         return $this->query;
     }
+    
+    protected function startWith($params, $nameVar, $columnName, $operator)
+    {
+        if (isset($params[$nameVar]) && $params[$nameVar]) {
+            $var = $params[$nameVar];
+            if ($operator == self::OP_AND) {
+                $opX = $this->query->expr()->andX();
+                $op = self::OP_AND;
+            } elseif ($operator == self::OP_OR) {
+                $opX = $this->query->expr()->orX();
+                $op = self::OP_OR;
+            }
+
+            $i = $this->qtdArgs;
+
+            if (is_array($var) && $var) {
+                foreach ($var as $item) {
+                    $dql = $this->columnArray($columnName, $op, $i, self::OP_LIKE);
+                    $opX->add($dql);
+                    $this->query->setParameter($i, $item.'%');
+                    $i++;
+                }
+                $this->query->andWhere($opX);
+            } else {
+                $dql = $this->columnArray($columnName, $op, $i, self::OP_LIKE);
+                $this->query->andWhere($dql)->setParameter($i, $var.'%');
+                $i++;
+            }
+            $this->qtdArgs = $i;
+        }
+
+        return $this->query;
+    }
 
     protected function between($params, $nameVar1, $nameVar2, $columnName)
     {
