@@ -72,6 +72,28 @@ class DoctrineHelper extends DoctrineHelperLib
      * @param $nameColumn - name of your column from your entity
      * @return result from database
      */
+    public function andStartWithOr($params, $nameVar, $nameColumn)
+    {
+        return $this->startWith($params, $nameVar, $nameColumn, DoctrineHelperLib::OP_OR);
+    }
+
+    /**
+     * @param $params - key value of your params to be searched.
+     * @param $nameVar - Name of the var from your query string
+     * @param $nameColumn - name of your column from your entity
+     * @return result from database
+     */
+    public function andEndWithAnd($params, $nameVar, $nameColumn)
+    {
+        return $this->startWith($params, $nameVar, $nameColumn, DoctrineHelperLib::OP_AND);
+    }
+    
+    /**
+     * @param $params - key value of your params to be searched.
+     * @param $nameVar - Name of the var from your query string
+     * @param $nameColumn - name of your column from your entity
+     * @return result from database
+     */
     public function andLikeAnd($params, $nameVar, $nameColumn)
     {
         return $this->like($params, $nameVar, $nameColumn, DoctrineHelperLib::OP_AND);
