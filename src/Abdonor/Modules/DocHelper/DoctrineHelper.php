@@ -41,7 +41,7 @@ class DoctrineHelper extends DoctrineHelperLib
     }
 
     /**
-     * @param $arrAllowed Array the params allowed to be searched in your query
+     * @param $arrAllowed array the params allowed to be searched in your query
      * An example of "$arrAllowed": $allowedParams = ['name' => 'name', 'id' => 'id',];
      * @return array
      */
