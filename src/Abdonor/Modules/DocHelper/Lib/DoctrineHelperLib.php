@@ -72,7 +72,11 @@ class DoctrineHelperLib
      */
     public static function getArrayQuery()
     {
-        return parse_query($_SERVER['QUERY_STRING']);
+        if (isset($_SERVER['QUERY_STRING'])) {
+            return parse_query($_SERVER['QUERY_STRING']);
+        } else {
+            return [];
+        }
     }
 
     public static function getParams($arrAllowed)
