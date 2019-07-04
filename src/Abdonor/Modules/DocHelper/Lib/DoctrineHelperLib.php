@@ -17,7 +17,8 @@ class DoctrineHelperLib
     const OP_LIKE = 'LIKE';
     const OP_EQUAL = '=';
     const OP_BETWEEN = 'BETWEEN';
-
+    const OP_NULL = 'NULL';
+    
     public function addRange($range)
     {
         if ($range) {
@@ -176,6 +177,38 @@ class DoctrineHelperLib
         return $this->query;
     }
     
+    protected function null($params, $nameVar, $columnName, $operator, $isNull = true)
+    {
+        if (isset($params[$nameVar]) && $params[$nameVar]) {
+            $var = $params[$nameVar];
+            if ($operator == self::OP_AND) {
+                $opX = $this->query->expr()->andX();
+                $op = self::OP_AND;
+            } elseif ($operator == self::OP_OR) {
+                $opX = $this->query->expr()->orX();
+                $op = self::OP_OR;
+            }
+
+            $i = $this->qtdArgs;
+
+            if (is_array($var) && $var) {
+                foreach ($var as $item) {
+                    $dql = $this->columnNull($columnName, $op, $isNull);
+                    $opX->add($dql);
+                    $i++;
+                }
+                $this->query->andWhere($opX);
+            } else {
+                $dql = $this->columnNull($columnName, $op, $isNull);
+                $this->query->andWhere($dql);
+                $i++;
+            }
+            $this->qtdArgs = $i;
+        }
+
+        return $this->query;
+    }
+    
     protected function startWith($params, $nameVar, $columnName, $operator)
     {
         if (isset($params[$nameVar]) && $params[$nameVar]) {
@@ -263,6 +296,23 @@ class DoctrineHelperLib
             }
         } else {
             $dql = " $columnName $comparator ?$i ";
+        }
+
+        return $dql;
+    }
+    
+    protected function columnNull($columnName, $op, $isNull = true)
+    {
+        $dql = '';
+        $null = ($isNull)? 'IS NULL' : 'IS NOT NULL';
+        if (is_array($columnName)) {
+            $op1 = '';
+            foreach ($columnName as $nameColumnItem) {
+                $dql .= " $op1 $nameColumnItem $null ";
+                $op1 = $op;
+            }
+        } else {
+            $dql = " $columnName $null ";
         }
 
         return $dql;
