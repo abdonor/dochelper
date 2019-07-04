@@ -109,7 +109,29 @@ class DoctrineHelper extends DoctrineHelperLib
     {
         return $this->eq($params, $nameVar, $nameColumn, DoctrineHelperLib::OP_OR);
     }
+    
+     /**
+     * @param $params - key value of your params to be searched.
+     * @param $nameVar - Name of the var from your query string
+     * @param $nameColumn - name of your column from your entity
+     * @return mixed result from database
+     */
+    public function andNull($params, $nameVar, $nameColumn)
+    {
+        return $this->null($params, $nameVar, $nameColumn, DoctrineHelperLib::OP_AND, true);
+    }
 
+    /**
+     * @param $params - key value of your params to be searched.
+     * @param $nameVar - Name of the var from your query string
+     * @param $nameColumn - name of your column from your entity
+     * @return mixed result from database
+     */
+    public function andNotNull($params, $nameVar, $nameColumn)
+    {
+        return $this->null($params, $nameVar, $nameColumn, DoctrineHelperLib::OP_AND, false);
+    }
+    
     /**
      * This between, doesnt allow multiple search.
      * @param $params - key value of your params to be searched.
