@@ -18,7 +18,7 @@ class DoctrineHelperLib
     const OP_EQUAL = '=';
     const OP_BETWEEN = 'BETWEEN';
     const OP_NULL = 'NULL';
-    
+
     public function addRange($range)
     {
         if ($range) {
@@ -100,7 +100,7 @@ class DoctrineHelperLib
 
         return $params;
     }
-    
+
     public static function getParamsNoQS($arrAllowed, $queryArr = [])
     {
         $params = [];
@@ -114,10 +114,20 @@ class DoctrineHelperLib
 
         return $params;
     }
-    
+
+    protected function fieldExists($params, $nameVar)
+    {
+        try {
+            $a = $params[$nameVar];
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
     protected function eq($params, $nameVar, $columnName, $operator)
     {
-        if (isset($params[$nameVar]) && $params[$nameVar]) {
+        if ($this->fieldExists($params, $nameVar)) {
             $var = $params[$nameVar];
             if ($operator == self::OP_AND) {
                 $opX = $this->query->expr()->andX();
@@ -129,15 +139,25 @@ class DoctrineHelperLib
             $i = $this->qtdArgs;
             if (is_array($var)) {
                 foreach ($var as $item) {
-                    $dql = $this->columnArray($columnName, $op, $i, self::OP_EQUAL);
-                    $opX->add($dql);
-                    $this->query->setParameter($i, $item);
+                    if ($item === null) {
+                        $dql = $this->columnNull($columnName, $op, true);
+                        $opX->add($dql);
+                    } else {
+                        $dql = $this->columnArray($columnName, $op, $i, self::OP_EQUAL);
+                        $opX->add($dql);
+                        $this->query->setParameter($i, $item);
+                    }
                     $i++;
                 }
                 $this->query->andWhere($opX);
             } else {
-                $dql = $this->columnArray($columnName, $op, $i, self::OP_EQUAL);
-                $this->query->andWhere($dql)->setParameter($i, $var);
+                if ($var === null) {
+                    $dql = $this->columnNull($columnName, $op, true);
+                    $this->query->andWhere($dql);
+                } else {
+                    $dql = $this->columnArray($columnName, $op, $i, self::OP_EQUAL);
+                    $this->query->andWhere($dql)->setParameter($i, $var);
+                }
                 $i++;
             }
             $this->qtdArgs = $i;
@@ -146,7 +166,7 @@ class DoctrineHelperLib
 
     protected function like($params, $nameVar, $columnName, $operator)
     {
-        if (isset($params[$nameVar]) && $params[$nameVar]) {
+        if ($this->fieldExists($params, $nameVar)) {
             $var = $params[$nameVar];
             if ($operator == self::OP_AND) {
                 $opX = $this->query->expr()->andX();
@@ -160,15 +180,25 @@ class DoctrineHelperLib
 
             if (is_array($var) && $var) {
                 foreach ($var as $item) {
-                    $dql = $this->columnArray($columnName, $op, $i, self::OP_LIKE);
-                    $opX->add($dql);
-                    $this->query->setParameter($i, '%'.$item.'%');
+                    if ($item === null) {
+                        $dql = $this->columnNull($columnName, $op, true);
+                        $opX->add($dql);
+                    } else {
+                        $dql = $this->columnArray($columnName, $op, $i, self::OP_LIKE);
+                        $opX->add($dql);
+                        $this->query->setParameter($i, '%' . $item . '%');
+                    }
                     $i++;
                 }
                 $this->query->andWhere($opX);
             } else {
-                $dql = $this->columnArray($columnName, $op, $i, self::OP_LIKE);
-                $this->query->andWhere($dql)->setParameter($i, '%'.$var.'%');
+                if ($var === null) {
+                    $dql = $this->columnNull($columnName, $op, true);
+                    $this->query->andWhere($dql);
+                } else {
+                    $dql = $this->columnArray($columnName, $op, $i, self::OP_LIKE);
+                    $this->query->andWhere($dql)->setParameter($i, '%' . $var . '%');
+                }
                 $i++;
             }
             $this->qtdArgs = $i;
@@ -176,7 +206,7 @@ class DoctrineHelperLib
 
         return $this->query;
     }
-    
+
     protected function null($params, $nameVar, $columnName, $operator, $isNull = true)
     {
         if (isset($params[$nameVar]) && $params[$nameVar]) {
@@ -208,7 +238,7 @@ class DoctrineHelperLib
 
         return $this->query;
     }
-    
+
     protected function startWith($params, $nameVar, $columnName, $operator)
     {
         if (isset($params[$nameVar]) && $params[$nameVar]) {
@@ -300,7 +330,7 @@ class DoctrineHelperLib
 
         return $dql;
     }
-    
+
     protected function columnNull($columnName, $op, $isNull = true)
     {
         $dql = '';
