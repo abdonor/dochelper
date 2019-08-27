@@ -354,13 +354,20 @@ class DoctrineHelperLib
         return " $columnName $comparator ?$i AND ?$i2 ";
     }
 
-    protected function search()
+    protected function search($array = [])
     {
         if (!$this->search instanceof Search) {
             $this->search = new Search();
             $o = self::getOrderBy();
-            $this->search->setOrderBy($o['order_by']);
-            $this->search->setAscOrDesc($o['order_ad']);
+            $orderBy = $o['order_by'];
+            $orderAscOrDesc =  $o['order_ad'];
+            if ($orderBy) {
+                if (array_key_exists($orderBy, $array)) {
+                    $orderBy = $array[$orderBy];
+                }
+            }
+            $this->search->setOrderBy($orderBy);
+            $this->search->setAscOrDesc($orderAscOrDesc);
             $this->search->setRange(self::getRange());
         }
 
