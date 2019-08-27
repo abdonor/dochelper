@@ -150,9 +150,12 @@ class DoctrineHelper extends DoctrineHelperLib
         return $this->in($params, $nameVar1, $nameColumn, DoctrineHelperLib::OP_OR);
     }
 
-    /** @return Lib\Search */
-    public function search()
+    /**
+     * @param $array
+     * @return Lib\Search
+     */
+    public function search($array = [])
     {
-        return parent::search();
+        return parent::search($array);
     }
 }
