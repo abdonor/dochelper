@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static array setParamsNoQS()
  * @method static array getRange()
  * @method static array getOrderBy()
- * @method static array search()
+ * @method static array search($array = [])
  * @method static array getRequest()
  */
 class DocHelper extends Facade
