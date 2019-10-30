@@ -348,6 +348,32 @@ class DoctrineHelperLib
         return $dql;
     }
 
+    protected function columnOperator($params, $nameVar, $columnName, $operator)
+    {
+        if ($this->validateParamVar($params, $nameVar)) {
+            $var = $this->valueVar($params, $nameVar);
+            $i = $this->qtdArgs;
+            {
+                $dql = " $columnName $operator  ?$i ";
+                $this->query->andWhere($dql)->setParameter($i, $var);
+                $i++;
+            }
+            $this->qtdArgs = $i;
+        }
+
+        return $this->query;
+    }
+
+    private function validateParamVar($params, $nameVar)
+    {
+        return (isset($params[$nameVar]) && $params[$nameVar]);
+    }
+
+    private function valueVar($params, $nameVar)
+    {
+        return $params[$nameVar];
+    }
+    
     protected function columnBetween($columnName, $i, $i2)
     {
         $comparator = self::OP_BETWEEN;
