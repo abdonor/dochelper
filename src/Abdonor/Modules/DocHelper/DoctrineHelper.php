@@ -150,6 +150,30 @@ class DoctrineHelper extends DoctrineHelperLib
         return $this->in($params, $nameVar1, $nameColumn, DoctrineHelperLib::OP_OR);
     }
 
+        /**
+     * This greater than, doesnt allow multiple search.
+     * @param $params - key value of your params to be searched.
+     * @param $nameVar - Name 1 of the var from your query string
+     * @param $nameColumn - name of your column from your entity
+     * @return query
+     */
+    public function gt($params, $nameVar, $nameColumn)
+    {
+        return $this->columnOperator($params, $nameVar, $nameColumn, '>');
+    }
+
+    /**
+     * This less than, doesnt allow multiple search.
+     * @param $params - key value of your params to be searched.
+     * @param $nameVar - Name 1 of the var from your query string
+     * @param $nameColumn - name of your column from your entity
+     * @return query
+     */
+    public function lt($params, $nameVar, $nameColumn)
+    {
+        return $this->columnOperator($params, $nameVar, $nameColumn, '<');
+    }
+    
     /**
      * @param $array
      * @return Lib\Search
