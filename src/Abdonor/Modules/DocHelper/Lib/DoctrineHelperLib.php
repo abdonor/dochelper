@@ -15,6 +15,7 @@ class DoctrineHelperLib
     const OP_OR = 'OR';
     const OP_AND = 'AND';
     const OP_LIKE = 'LIKE';
+    const OP_NOT_LIKE = 'NOT LIKE';
     const OP_EQUAL = '=';
     const OP_BETWEEN = 'BETWEEN';
     const OP_NULL = 'NULL';
@@ -164,7 +165,7 @@ class DoctrineHelperLib
         }
     }
 
-    protected function like($params, $nameVar, $columnName, $operator)
+    protected function like($params, $nameVar, $columnName, $operator, $opLike = self::OP_LIKE)
     {
         if ($this->fieldExists($params, $nameVar)) {
             $var = $params[$nameVar];
@@ -184,7 +185,7 @@ class DoctrineHelperLib
                         $dql = $this->columnNull($columnName, $op, true);
                         $opX->add($dql);
                     } else {
-                        $dql = $this->columnArray($columnName, $op, $i, self::OP_LIKE);
+                        $dql = $this->columnArray($columnName, $op, $i, $opLike);
                         $opX->add($dql);
                         $this->query->setParameter($i, '%' . $item . '%');
                     }
@@ -196,7 +197,7 @@ class DoctrineHelperLib
                     $dql = $this->columnNull($columnName, $op, true);
                     $this->query->andWhere($dql);
                 } else {
-                    $dql = $this->columnArray($columnName, $op, $i, self::OP_LIKE);
+                    $dql = $this->columnArray($columnName, $op, $i, $opLike);
                     $this->query->andWhere($dql)->setParameter($i, '%' . $var . '%');
                 }
                 $i++;
