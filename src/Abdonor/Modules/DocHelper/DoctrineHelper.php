@@ -65,6 +65,23 @@ class DoctrineHelper extends DoctrineHelperLib
     {
         return $this->like($params, $nameVar, $nameColumn, DoctrineHelperLib::OP_OR);
     }
+    
+   /**
+     * @param $params - key value of your params to be searched.
+     * @param $nameVar - Name of the var from your query string
+     * @param $nameColumn - name of your column from your entity
+     * @return result from database
+     */
+    public function andNotLikeOr($params, $nameVar, $nameColumn)
+    {
+        return $this->like(
+            $params,
+            $nameVar,
+            $nameColumn,
+            DoctrineHelperLib::OP_OR,
+            DoctrineHelperLib::OP_NOT_LIKE
+        );
+    }
 
     /**
      * @param $params - key value of your params to be searched.
